@@ -49,9 +49,9 @@ int main(int argc, char* argv[]) {
 		
 		if (header->caplen < sizeof(struct libnet_ethernet_hdr))  
 	    continue; 
-	  struct libnet_ethernet_hdr* eth = (struct libnet_ethernet_hdr*)packet; 
+	  	struct libnet_ethernet_hdr* eth = (struct libnet_ethernet_hdr*)packet; 
 	  
-	  if (ntohs(eth->ether_type) != ETHERTYPE_IP)
+	  	if (ntohs(eth->ether_type) != ETHERTYPE_IP)
 		  continue; //ipv4일때만!
 		 
 		
@@ -76,15 +76,11 @@ int main(int argc, char* argv[]) {
 		
 		
 		//ip
-		if (header->caplen <
-    sizeof(struct libnet_ethernet_hdr) + sizeof(struct libnet_ipv4_hdr))
-			   continue;
+		if (header->caplen < sizeof(struct libnet_ethernet_hdr) + sizeof(struct libnet_ipv4_hdr))
+			continue;
 
-		struct libnet_ipv4_hdr* ip =
-		    (struct libnet_ipv4_hdr*)
-		    (packet + sizeof(struct libnet_ethernet_hdr));
-		
-				uint8_t ip_header_len = ip->ip_hl * 4;
+		struct libnet_ipv4_hdr* ip = (struct libnet_ipv4_hdr*)(packet + sizeof(struct libnet_ethernet_hdr));
+		uint8_t ip_header_len = ip->ip_hl * 4;
 
 		if (ip_header_len < sizeof(struct libnet_ipv4_hdr))
 		    continue;
@@ -92,8 +88,6 @@ int main(int argc, char* argv[]) {
 		if (header->caplen < sizeof(struct libnet_ethernet_hdr) + ip_header_len)
 		    continue;
 		    
-		
-		
 		if(ip->ip_p != IPPROTO_TCP)
 				continue;
 		
@@ -113,29 +107,28 @@ int main(int argc, char* argv[]) {
         (unsigned)((dst_ip >> 8) & 0xFF),
         (unsigned)(dst_ip & 0xFF));   
     
-    //port
-    if (header->caplen < sizeof(struct libnet_ethernet_hdr) + ip_header_len + sizeof(struct libnet_tcp_hdr))
+    	//port
+    	if (header->caplen < sizeof(struct libnet_ethernet_hdr) + ip_header_len + sizeof(struct libnet_tcp_hdr))
 		    continue;
 		
 		struct libnet_tcp_hdr* tcp = (struct libnet_tcp_hdr*)(packet + sizeof(struct libnet_ethernet_hdr) + ip_header_len);
 		
 		
-    uint16_t src_port = ntohs(tcp->th_sport);
-    printf("src port: %u\n", src_port);
-    uint16_t dst_port = ntohs(tcp->th_dport);
-    printf("dst port: %u\n", dst_port);
-    
+  		uint16_t src_port = ntohs(tcp->th_sport);
+    	printf("src port: %u\n", src_port);
+    	uint16_t dst_port = ntohs(tcp->th_dport);
+    	printf("dst port: %u\n", dst_port);
+
+		
 		//payload (시작점을 찾기 위해 tcp 헤더의 실제 길이 구해야함)
-	
 		uint8_t tcp_header_len = tcp->th_off * 4;
 		if (tcp_header_len < sizeof(struct libnet_tcp_hdr))
-    continue;
+    		continue;
 
 		if (header->caplen < sizeof(struct libnet_ethernet_hdr) + ip_header_len + tcp_header_len)
 		    continue;
 		 
-		 const u_char* payload =
-    (const u_char*)tcp + tcp_header_len;
+		const u_char* payload = (const u_char*)tcp + tcp_header_len;
 
 		int payload_len = ntohs(ip->ip_len) - ip_header_len - tcp_header_len;
 
@@ -150,8 +143,10 @@ int main(int argc, char* argv[]) {
 		int print_len = payload_len > 20 ? 20 : payload_len;
 
 		printf("data: ");
+		
 		for (int i = 0; i < print_len; i++)
 		    printf("%02x ", payload[i]);
+		
 		printf("\n");
 		 
 	}
