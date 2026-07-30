@@ -10,4 +10,8 @@ sample: pcap-test wlan0
 
 ### Demo
 ![](pcap-test.mp4)
+<video src="https://github.com/user-attachments/assets/5752106f-4ae7-4fa9-b9b2-03c7c51c94aa"
+       controls
+       width="100%">
+</video>
 https://github.com/user-attachments/assets/5752106f-4ae7-4fa9-b9b2-03c7c51c94aa
